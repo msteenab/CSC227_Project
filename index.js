@@ -1,22 +1,37 @@
-const express = require('express');
-const path = require('path');
-const app = express()
-const port = 8080
+const request = require('request');
+let  apikey = 'd6233574a2916e0858315db07177e2fe';
 
-const argv = require('yargs').argv;
+const forecast = function (latitude, longitude) {
 
-let  API_KEY = 'd6233574a2916e0858315db07177e2fe';
+let url = `http://api.openweathermap.org/data/2.5/weather?`
+			+`lat=${latitude}&lon=${longitude}&appid=${apikey}`
 
-let city = argv.c || 'raleigh';
+	request({ url: url, json: true }, function (error, response) {
+		if (error) {
+			console.log('Unable to connect to Forecast API');
+		}
+		else {
 
-let url = `http://api.openweathermap.org/data/2.5/weather?q=${city}&units=imperial&imperial&appid=${API_KEY}`
+			console.log('It is '
+				+ response.body.main.temp
+				+ ' degrees out.'
+			);
 
-request(url, function (err, response, body) {
-    if(err){
-        console.log('error', error);
-    } else {
-        let weather = JSON.parse(body)
-        let message = `It's ${weather.main.temp} degrees in ${weather.name}.`;
-        console.log(message)
-    }
-});
+			console.log('The high is '
+				+ response.body.main.temp_max
+				+ ' with a low of '
+				+ response.body.main.temp_min
+			);
+
+			console.log('Humidity is '
+				+ response.body.main.humidity
+			);
+		}
+	})
+}
+
+var latitude = 22.7196; 
+var longitude = 75.8577;
+
+// Function call
+forecast(latitude, longitude);
