@@ -1,0 +1,11 @@
+{
+  "name": "current_nc_temp",
+  "version": "1.0.0",
+  "description": "CSC227 Final Project",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "author": "Kristena Bridges",
+  "license": "ISC"
+}
