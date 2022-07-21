@@ -1,7 +1,15 @@
-var http = require('http');
+const http = require('http');
+const hostname = '127.0.0.1';
+const port = 8080;
 
-http.createServer(function (req, res) {
-	res.writeHead(200, {'Content-Type': 'text/html'});
+const server = http.createServer((req, res) => {
 
-	res.end('Hello World!');
-}).listen(8080);
+	res.statusCode = 200;
+	res.setHeader('Content-Type', 'text/plain');
+	res.end('Kristena First App');
+});
+
+server.listen(port, () => {
+	console.log(`Sever running at http://${hostname}:${port}/`);
+});
+
