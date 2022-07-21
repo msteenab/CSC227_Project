@@ -1,37 +1,25 @@
-const request = require('request');
-let  apikey = 'd6233574a2916e0858315db07177e2fe';
+const express = require('express');
+const https = require('https');
+const path = require('path');
+const fs = require('fs');
+const app = express()
+const port = 8080
 
-const forecast = function (latitude, longitude) {
+var key = fs.readFileSync(__dirname + '/certs/selfsigned.key');
+var cert = fs.readFileSync(__dirname + '/certs/selfsigned.crt');
+var credentials = {
+  key: key,
+  cert: cert
+};
 
-let url = `http://api.openweathermap.org/data/2.5/weather?`
-			+`lat=${latitude}&lon=${longitude}&appid=${apikey}`
+app.use(express.static(__dirname + '/public'));
 
-	request({ url: url, json: true }, function (error, response) {
-		if (error) {
-			console.log('Unable to connect to Forecast API');
-		}
-		else {
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, '/index.html'));
+})
 
-			console.log('It is '
-				+ response.body.main.temp
-				+ ' degrees out.'
-			);
+var httpsServer = https.createServer(credentials, app);
 
-			console.log('The high is '
-				+ response.body.main.temp_max
-				+ ' with a low of '
-				+ response.body.main.temp_min
-			);
-
-			console.log('Humidity is '
-				+ response.body.main.humidity
-			);
-		}
-	})
-}
-
-var latitude = 22.7196; 
-var longitude = 75.8577;
-
-// Function call
-forecast(latitude, longitude);
+httpsServer.listen(port, () => {
+  console.log("Https server listing on port : " + port)
+});
